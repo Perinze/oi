@@ -1,0 +1,32 @@
+struct Node {
+	int value;
+	Node *par, *kid[2];
+};
+Node *root;
+
+bool kid_size(Node *x) {
+	return x->par->kid[1] == x;
+}
+
+inline void connect(Node *kid, Node* par, bool side) {
+	kid->par = par;
+	par->kid[side] = kid;
+}
+
+inline void rotate(Node *x) {
+	bool direct = which_kid(x);	// 0 for left kid, 1 for right kid
+	Node *y = x->par;
+	x->par = y->par;
+	if ((Node *z = y->par) != NULL) {
+		z->kid[kid_size(y)] = x;
+	}
+	if (x->kid[!which_kid(x)] != NULL) {
+		y->kid[which_kid(x)] = x->kid[!which_kid(x)];
+	}
+	y->par = x;
+	x->kid[!which_kid(x)] = y;
+	if (x->par == NULL) root = x;
+}
+
+void print_tree() {
+}
