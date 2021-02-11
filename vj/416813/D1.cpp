@@ -1,58 +1,153 @@
 #include <iostream>
 #include <iomanip>
-#include <cstring>
-#include <algorithm>
-#include <vector>
 #include <string>
-#include <queue>
-#include <stack>
-#include <set>
-#include <map>
-#include <list>
 #include <sstream>
+#include <vector>
+#include <stack>
 using namespace std;
 
-const int INF = 0x3f3f3f3f;
+typedef pair<int, double> ITEM;
 
-typedef long long ll;
-typedef pair<int, int> P;
-
-void solve()
+void print1(stack<int> s, vector<ITEM> exp)
 {
-	string line;
-	while (cin >> line)
-	{
-		stringstream ss;
-		ss << line;
-		string op;
-		list<string> exp;
-		while (ss >> op)
-		{
-			exp.push_back(op);
-		}
-		list<string>::iterator ite;
-		for (ite = exp.begin(); ite != exp.end(); ite++)
-		{
-			if (*ite == "+")
-			{
-				ite++;
-				double r = stod(*ite);
-				ite--; ite--;
-				double l = stod(*ite), 
-				*ite = to_string(l + r);
-				ite++;
-				exp.erase(ite);
-				exp.erase(ite);
-			}
-		}
-		for (ite = exp.begin(); ite != exp.end(); ite++)
-			cout << *ite << endl;
-	}
+    #ifdef DEBUG
+    cout << "STACK: ";
+    while (!s.empty())
+    {
+        switch (s.top())
+        {
+            case 1: cout << "+ "; break;
+            case 2: cout << "- "; break;
+            case 3: cout << "* "; break;
+            case 4: cout << "/ "; break;
+        }
+        s.pop();
+    }
+    cout << endl;
+
+    cout << "EXP: ";
+    for (int i = 0; i < exp.size(); i++)
+    {
+        switch (exp[i].first)
+        {
+            case 0: cout << exp[i].second << ' '; break;
+            case 1: cout << "+ "; break;
+            case 2: cout << "- "; break;
+            case 3: cout << "* "; break;
+            case 4: cout << "/ "; break;
+        }
+    }
+    cout << endl;
+    #endif
+}
+
+void print2(stack<double> ds)
+{
+    #ifdef DEBUG
+    cout << "DOUBLE STACK: ";
+    while (!ds.empty())
+    {
+        cout << ds.top() << ' ';
+        ds.pop();
+    }
+    cout << endl;
+    #endif
 }
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	solve();
-	return 0;
+    cout << fixed << setprecision(2);
+    string line;
+    for (;;)
+    {
+        getline(cin, line);
+        if (line == "0") break;
+        stringstream ss(line);
+        vector<ITEM> exp;
+        string item;
+        stack<int> s;
+        while (ss >> item)
+        {
+            if (item == "+") 
+            {
+                while (!s.empty() && s.top() >= 3)    // MUL or DIV
+                {
+                    exp.push_back(ITEM(s.top(), 0));
+                    s.pop();
+                }
+                s.push(1);
+            }
+            else if (item == "-") 
+            {
+                while (!s.empty() && s.top() >= 3)    // MUL or DIV
+                {
+                    exp.push_back(ITEM(s.top(), 0));
+                    s.pop();
+                }
+                s.push(2);
+            }
+            else if (item == "*") 
+            {
+                while (!s.empty() && s.top() >= 4)    // DIV
+                {
+                    exp.push_back(ITEM(s.top(), 0));
+                    s.pop();
+                }
+                s.push(3);
+            }
+            else if (item == "/") 
+            {
+                s.push(4);
+            }
+            else 
+            {
+                exp.push_back(ITEM(0, stod(item)));
+            }
+            print1(s, exp);
+        }
+        while (!s.empty())
+        {
+            exp.push_back(ITEM(s.top(), 0));
+            s.pop();
+        }
+        print1(s, exp);
+
+        stack<double> ds;
+        for (int i = 0; i < exp.size(); i++)
+        {
+            int type = exp[i].first;
+            if (type == 0)  // number
+            {
+                ds.push(exp[i].second);
+            }
+            else if (type == 1)
+            {
+                double b = ds.top(); ds.pop();
+                double a = ds.top(); ds.pop();
+                ds.push(a + b);
+            }
+            else if (type == 2)
+            {
+                double b = ds.top(); ds.pop();
+                double a = ds.top(); ds.pop();
+                ds.push(a - b);
+            }
+            else if (type == 3)
+            {
+                double b = ds.top(); ds.pop();
+                double a = ds.top(); ds.pop();
+                ds.push(a * b);
+            }
+            else if (type == 4)
+            {
+                double b = ds.top(); ds.pop();
+                double a = ds.top(); ds.pop();
+                ds.push(a / b);
+            }
+            print2(ds);
+        }
+
+        cout << ds.top() << endl;
+    }
+    return 0;
 }

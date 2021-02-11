@@ -1,0 +1,20 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int x[100000];
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", x + i);
+    printf("%d %d\n", x[1] - x[0], x[n - 1] - x[0]);
+    for (int i = 1; i < n - 1; i++) {
+        printf("%d ", min(x[i] - x[i - 1], x[i + 1] - x[i]));
+        printf("%d\n", max(x[i] - x[0], x[n - 1] - x[i]));
+    }
+    printf("%d %d\n", x[n - 1] - x[n - 2], x[n - 1] - x[0]);
+    return 0;
+}
