@@ -1,0 +1,91 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+#define PLUS -1e-40
+#define MINUS -2e-40
+#define MUL -3e-40
+#define DIV -4e-40
+
+void print(vector<double> exp)
+{
+    /*
+    for (int i = 0; i < exp.size(); i++) cout << exp[i] << ' ';
+    cout << endl;
+    */
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cout << fixed << setprecision(2);
+    string line;
+    for (;;)
+    {
+        getline(cin, line);
+        if (line == "0") break;
+        stringstream ss(line);
+        vector<double> exp;
+        string item;
+        while (ss >> item)
+        {
+            if (item == "+") exp.push_back(PLUS);
+            else if (item == "-") exp.push_back(MINUS);
+            else if (item == "*") exp.push_back(MUL);
+            else if (item == "/") exp.push_back(DIV);
+            else exp.push_back(stod(item));
+        }
+        print(exp);
+        for (int i = 0; i < exp.size(); i++)
+        {
+            if (exp[i] == MUL)
+            {
+                double l = exp[i - 1];
+                double r = exp[i + 1];
+                double res = l * r;
+                exp.erase(exp.begin() + i);
+                exp.erase(exp.begin() + i);
+                exp[--i] = res;
+                print(exp);
+            }
+            else if (exp[i] == DIV)
+            {
+                double l = exp[i - 1];
+                double r = exp[i + 1];
+                double res = l / r;
+                exp.erase(exp.begin() + i);
+                exp.erase(exp.begin() + i);
+                exp[--i] = res;
+                print(exp);
+            }
+        }
+        for (int i = 0; i < exp.size(); i++)
+        {
+            if (exp[i] == PLUS)
+            {
+                double l = exp[i - 1];
+                double r = exp[i + 1];
+                double res = l + r;
+                exp.erase(exp.begin() + i);
+                exp.erase(exp.begin() + i);
+                exp[--i] = res;
+                print(exp);
+            }
+            else if (exp[i] == MINUS)
+            {
+                double l = exp[i - 1];
+                double r = exp[i + 1];
+                double res = l - r;
+                exp.erase(exp.begin() + i);
+                exp.erase(exp.begin() + i);
+                exp[--i] = res;
+                print(exp);
+            }
+        }
+        cout << exp[0] << endl;
+    }
+    return 0;
+}

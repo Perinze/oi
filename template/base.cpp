@@ -5,6 +5,11 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <sstream>
 using namespace std;
 
 const int INF = 0x3f3f3f3f;

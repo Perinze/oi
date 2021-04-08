@@ -6,8 +6,12 @@ using namespace std;
 const int MAXN = 100010, MAXM = 100010, MAXK = 510;
 
 struct edge {
+<<<<<<< HEAD
 	int to;
 	int cost;
+=======
+	int to, cost;
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 };
 int n, m, k;
 vector<edge> G[MAXN];
@@ -61,14 +65,20 @@ inline int typ(int x)
 
 int main()
 {
+<<<<<<< HEAD
 	memset(d, 0x3f, sizeof(d));
+=======
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 	scanf("%d%d%d", &n, &m, &k);
 	int s = 1;
 	for (int i = 1; i <= k; i++) {
 		scanf("%d", c + i);
 		hd[i] = s;
 		s += c[i];
+<<<<<<< HEAD
 		d[i][i] = 0;
+=======
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 	}
 	init(n);
 	for (int i = 1; i <= m; i++) {
@@ -89,8 +99,15 @@ int main()
 			}
 		}
 	}
+<<<<<<< HEAD
 	puts("Yes");
 	for (int i = 1; i <= n; i++) {
+=======
+	puts("YES");
+	memset(d, 0x3f, sizeof(d));
+	for (int i = 1; i <= n; i++) {
+		d[i][i] = 0;
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 		for (int j = 0; j < (int)G[i].size(); j++) {
 			int v = typ(i);
 			int u = typ(G[i][j].to);
@@ -98,11 +115,18 @@ int main()
 			d[v][u] = d[u][v] = min(d[v][u], w);
 		}
 	}
+<<<<<<< HEAD
 	for (int l = 1; l <= k; l++)
 		for (int i = 1; i <= k; i++)
 			for (int j = 1; j <= k; j++)
 				if (d[i][l] != 0x3f3f3f3f && d[l][j] != 0x3f3f3f3f)
 					d[i][j] = min(d[i][j], d[i][l] + d[l][j]);
+=======
+	for (int i = 1; i <= k; i++)
+		for (int j = 1; j <= k; j++)
+			for (int l = 1; l <= k; l++)
+				d[i][j] = min(d[i][j], d[i][l] + d[l][j]);
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 	for (int i = 1; i <= k; i++) {
 		for (int j = 1; j <= k; j++)
 			printf("%d ", d[i][j] == 0x3f3f3f3f ? -1 : d[i][j]);

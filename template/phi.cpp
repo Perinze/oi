@@ -1,13 +1,14 @@
-int phi[MAXN + 1];
+ll phi[MAXN + 1];
 
-void getphi()
+void euler()
 {
 	memset(phi, 0, sizeof(phi));
-	for (int i = 2; i <= MAXN; i++)
+	phi[1] = 1;
+	for (ll i = 2; i <= MAXN; i++)
 	{
 		if (!phi[i])
 		{
-			for (int j = i; j <= MAXN; j += i)
+			for (ll j = i; j <= MAXN; j += i)
 			{
 				if (!phi[j]) phi[j] = j;
 				phi[j] = phi[j] / i * (i - 1);

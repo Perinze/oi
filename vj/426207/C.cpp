@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+<<<<<<< HEAD
 #include <cmath>
 #include <algorithm>
 using namespace std;
@@ -9,12 +10,27 @@ int s[10][10][10][10];
 int a[10][10];
 int n;
 const int INF = 0x3f3f3f3f;
+=======
+#include <algorithm>
+using namespace std;
+
+int n;
+int dp[20][10][10][10][10];
+int a[10][10];
+int s[10][10];
+
+inline int gsum(int i1, int j1, int i2, int j2)
+{
+    return s[i2][j2] - s[i2][j1 - 1] - s[i1 - 1][j2] + s[i1 - 1][j1 - 1];
+}
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 
 int main()
 {
     scanf("%d", &n);
     for (int i = 1; i <= 8; i++)
         for (int j = 1; j <= 8; j++) {
+<<<<<<< HEAD
             scanf("%d", &a[i][j]);
             a[i][j] += a[i - 1][j] + a[i][j - 1] - a[i - 1][j - 1];
         }
@@ -50,4 +66,14 @@ int main()
     double ans = sqrt((double)res / (double)n - (double)avg * avg);
     printf("%.3f\n", ans);
     return 0;
+=======
+            scanf("%d", &s[i][j]);
+            s[i][j] += s[i][j - 1] + s[i - 1][j] - s[i - 1][j - 1];
+        }
+    for (int i = 1; i <= 8; i++)
+        for (int j = 1; j <= 8; j++)
+            for (int k = i; k <= 8; k++)
+                for (int l = j; l <= 8; l++)
+                    dp[0][i][j][k][l] = gsum(i, j, k, l);
+>>>>>>> 451f61128d5e1a415065dc1de7aa6990da766e13
 }
