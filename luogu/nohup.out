@@ -1,0 +1,45 @@
+I2020-10-10 22:54:24.004396 instance.cpp:1183] Override Enabled Addons: {}
+I2020-10-10 22:54:24.004448 instance.cpp:1184] Override Disabled Addons: {}
+I2020-10-10 22:54:24.005966 addonmanager.cpp:177] Loaded addon wayland
+dropbox: locating interpreter
+dropbox: logging to /tmp/dropbox-antifreeze-eNqmb4
+dropbox: initializing
+dropbox: initializing python 3.7.9
+dropbox: setting program path '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/dropbox'
+dropbox: setting python path '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443:/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/python-packages.zip'
+dropbox: python initialized
+dropbox: running dropbox
+dropbox: setting args
+dropbox: enabling allocator metrics
+dropbox: applying overrides
+I2020-10-10 22:54:24.042710 addonmanager.cpp:177] Loaded addon xcb
+I2020-10-10 22:54:24.045826 addonmanager.cpp:177] Loaded addon quickphrase
+I2020-10-10 22:54:24.047047 addonmanager.cpp:177] Loaded addon clipboard
+I2020-10-10 22:54:24.047358 addonmanager.cpp:177] Loaded addon imselector
+dropbox: running main script
+I2020-10-10 22:54:24.083568 addonmanager.cpp:177] Loaded addon keyboard
+I2020-10-10 22:54:24.083855 addonmanager.cpp:177] Loaded addon waylandim
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/cryptography.hazmat.bindings._constant_time.cpython-37m-x86_64-linux-gnu.so'
+I2020-10-10 22:54:24.209720 addonmanager.cpp:177] Loaded addon unicode
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/cryptography.hazmat.bindings._openssl.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/cryptography.hazmat.bindings._padding.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/apex._apex.cpython-37m-x86_64-linux-gnu.so'
+I2020-10-10 22:54:24.459191 addonmanager.cpp:177] Loaded addon pinyinhelper
+E2020-10-10 22:54:24.460089 addonloader.cpp:57] Failed to create addon: dbus Unable to request dbus name
+I2020-10-10 22:54:24.460177 addonmanager.cpp:271] Unloading addon pinyinhelper
+I2020-10-10 22:54:24.474303 addonmanager.cpp:271] Unloading addon unicode
+I2020-10-10 22:54:24.487710 addonmanager.cpp:271] Unloading addon waylandim
+I2020-10-10 22:54:24.487743 addonmanager.cpp:271] Unloading addon keyboard
+I2020-10-10 22:54:24.488787 addonmanager.cpp:271] Unloading addon imselector
+I2020-10-10 22:54:24.488817 addonmanager.cpp:271] Unloading addon clipboard
+I2020-10-10 22:54:24.488850 addonmanager.cpp:271] Unloading addon quickphrase
+I2020-10-10 22:54:24.488994 addonmanager.cpp:271] Unloading addon xcb
+I2020-10-10 22:54:24.489159 addonmanager.cpp:271] Unloading addon wayland
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/psutil._psutil_linux.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/psutil._psutil_posix.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/tornado.speedups.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/wrapt._wrappers.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/PyQt5.QtWidgets.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/PyQt5.QtCore.cpython-37m-x86_64-linux-gnu.so'
+dropbox: load fq extension '/home/perinze/.dropbox-dist/dropbox-lnx.x86_64-107.4.443/PyQt5.QtGui.cpython-37m-x86_64-linux-gnu.so'
+Another instance of Dropbox (1072) is running!
