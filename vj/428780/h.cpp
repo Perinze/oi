@@ -9,7 +9,7 @@ int n;
 int pre[maxn];
 int trie[1 << (flen + 1)][2];
 int map[maxn];
-int cnt = 0;
+int cnt;
 char tmp[flen];
 
 void insert(char *seq, int len, int ite)
@@ -50,21 +50,25 @@ void i2s(int x, char *s, int len)
 
 int main()
 {
-    memset(map, -1, sizeof(map));
-    scanf("%d", &n);
-    for (int i = 1; i <= n; i++) {
-        int x;
-        scanf("%d", &x);
-        pre[i] = pre[i - 1] ^ x;
+    while (~scanf("%d", &n)) {
+        cnt = 0;
+        memset(trie, 0, sizeof(trie));
+        memset(map, -1, sizeof(map));
+        for (int i = 1; i <= n; i++) {
+            int x;
+            scanf("%d", &x);
+            pre[i] = pre[i - 1] ^ x;
+        }
+        int l = 1, r = 1, ans = pre[1];
+        for (int i = 1; i <= n; i++) {
+            i2s(pre[i], tmp, flen);
+            reverse(tmp, tmp + flen);
+            insert(tmp, flen, i);
+            int y = find(tmp, flen);
+            int res = pre[y] ^ pre[i];
+            if (res > ans) ans = res, l = y + 1, r = i;
+        }
+        printf("%d %d %d\n", ans, l, r);
     }
-    int l = 1, r = 1, ans = pre[1];
-    for (int i = 1; i <= n; i++) {
-        i2s(pre[i], tmp, flen);
-        insert(tmp, flen, i);
-        int y = find(tmp, flen);
-        int res = pre[y] ^ pre[i];
-        if (res > ans) ans = res, l = y + 1, r = i;
-    }
-    printf("%d %d %d\n", ans, l, r);
     return 0;
 }
