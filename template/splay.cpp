@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#define debug(fmt, ...) printf(fmt, ##__VA_ARGS__)
 using namespace std;
 
 const int MAXN = 20;
@@ -22,7 +23,7 @@ bool side(int x)
 {
 	if (par[x] == -1)
 	{
-		cout << "No parent error" << endl;
+		debug("\nerr: %d has no parent\n\n", x);
 	}
 	return kid[par[x]][1] == x;
 }
@@ -40,12 +41,13 @@ bool leaf(int x)
 
 void print_array()
 {
-	for (int i = 0; i < size; i++) cout << par[i] << ' ';
-	cout << endl;
-	for (int i = 0; i < size; i++) cout << kid[i][0] << ',' << kid[i][1] << ' ';
-	cout << endl;
-	for (int i = 0; i < size; i++) cout << val[i] << ' ';
-	cout << endl;
+	debug("print array\n");
+	for (int i = 0; i < size; i++) debug("%d\t", par[i]);
+	debug("\n");
+	for (int i = 0; i < size; i++) debug("%d, %d\t", kid[i][0], kid[i][1]);
+	debug("\n");
+	for (int i = 0; i < size; i++) debug("%d\t", val[i]);
+	debug("\n\n");
 }
 
 void print_tree(int x)
@@ -54,38 +56,52 @@ void print_tree(int x)
 	{
 		return;
 	}
-	cout << val[x] << " -> " << val[kid[x][0]] << ", " << val[kid[x][1]] << endl;
+	debug("%d -> %d, %d\n", val[x], val[kid[x][0]], val[kid[x][1]]);
 	print_tree(kid[x][0]);
 	print_tree(kid[x][1]);
 }
 
-void rotate(int x)
+void rotate(int v)
 {
-	bool f = side(x);
-	int y = par[x];
-	int z = par[y];
+	bool f = side(v);
+	int p = par[v];
+	bool pf = side(p);
+	int g = par[p];
 
-	set_par(x, z, side(y));
-	set_par(kid[x][!f], y, f);
-	set_par(y, x, !f);
+	if (g == -1) {
+		goto single;
+	}
 
-	if (par[x] == -1) root = x;
+	if (f == pf) {
+		int gp = par[g];
+		set_par(p, gp, side(g));
+		set_par(kid[p][!pf], g, pf);
+		set_par(g, p, !pf);
+		g = gp;
+	}
+
+	single:
+	set_par(v, g, side(p));
+	set_par(kid[v][!f], p, f);
+	set_par(p, v, !f);
+
+	if (par[v] == -1) root = v;
 }
 
-bool debug = true;
 void splay(int x)
 {
-	if (val[x] == 4) debug = true;
+	debug("splay(%d)\n", x);
 	while (par[x] != -1)
 	{
 		if (par[par[x]] != -1 && side(par[x]) == side(x))
 		{
-			if (debug) cout << "rotate(" << par[x] << ")\n";
+			debug("rotate(%d)\n", par[x]);
 			rotate(par[x]);
 		}
-		if (debug) cout << "rotate(" << x << ")\n";
+		debug("rotate(%d)\n", x);
 		rotate(x);
 	}
+	debug("\n");
 }
 
 void insert(int x)
@@ -107,35 +123,37 @@ void insert(int x)
 	}
 	set_par(i, p, x > val[p]);
 
-	cout << "after insert\n";
+	debug("after insert(%d)\n", x);
 	print_tree(root);
+	debug("\n");
 
 	splay(i);
-	cout << "after splay\n";
+	debug("after splay(%d)\n", x);
 	print_tree(root);
+	debug("\n");
 }
 
 int main()
 {
 	init();
 	insert(7);
-	getchar();
+	puts("");
 	insert(1);
-	getchar();
+	puts("");
 	insert(4);
-	getchar();
+	puts("");
 	insert(8);
-	getchar();
+	puts("");
 	insert(3);
-	getchar();
+	puts("");
 	insert(9);
-	getchar();
+	puts("");
 	insert(5);
-	getchar();
+	puts("");
 	insert(2);
-	getchar();
+	puts("");
 	insert(6);
-	getchar();
+	puts("");
 	insert(0);
 	return 0;
 }
