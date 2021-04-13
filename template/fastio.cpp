@@ -1,4 +1,4 @@
-namespace io {
+namespace i {
     const int MAXSIZE = 1 << 20;
     char buf[MAXSIZE], *p1, *p2;
     #define gc()                                                                \
