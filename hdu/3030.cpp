@@ -40,8 +40,6 @@ int main()
             seq[i] = num[i] = A[i % m];
             A[i % m] = (x * A[i % m] + y * (i + 1)) % z;
         }
-        for (int i = 0; i < n; i++) printf(" %d", seq[i]);
-        putchar('\n');
         ll ans = 0;
         sort(num, num + n);
         int cnt = unique(num, num + n) - num; // cnt is the number of unique numbers
