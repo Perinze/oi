@@ -59,16 +59,22 @@ int main()
             scanf("%s", cmd);
             if (!strcmp(cmd, "S")) {
                 scanf("%d%d%d%d", &a, &b, &c, &d);
+                a++, b++, c++, d++;
+                if (a > c) swap(a, c);
+                if (b > d) swap(b, d);
                 printf("%d\n", query(a, b, c, d));
             } else if (!strcmp(cmd, "A")) {
                 scanf("%d%d%d", &a, &b, &c);
+                a++, b++;
                 add(a, b, c);
             } else if (!strcmp(cmd, "D")) {
                 scanf("%d%d%d", &a, &b, &c);
+                a++, b++;
                 add(a, b, -c);
             } else if (!strcmp(cmd, "M")) {
                 scanf("%d%d%d%d%d", &a, &b, &c, &d, &e);
-                int x = add(a, b, -e);
+                a++, b++, c++, d++;
+                int x = -add(a, b, -e);
                 add(c, d, x);
             }
         }
