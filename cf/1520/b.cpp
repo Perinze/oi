@@ -10,10 +10,15 @@ int main()
         string tmp;
         cin >> tmp;
         int n = (int)tmp.size();
-        long long ans = 0;
-        for (int i = 0; i < n; i++) {
-            ans = ans + 9 + tmp[i] - '0';
-        }
+        int h = tmp[0] - '0';
+        int ans = 9 * (n - 1) + h; 
+        for (int i = 1; i < n; i++)
+            if (tmp[i] - '0' > h)
+                break;
+            else if (tmp[i] - '0' < h) {
+                ans -= 1;
+                break;
+            }
         cout << ans << endl;
     }
     return 0;
