@@ -1,9 +1,8 @@
-int par[MAXN], rnk[MAXN];
+int par[maxn], rnk[maxn];
 
 void init(int n)
 {
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		par[i] = i;
 		rnk[i] = 0;
 	}
@@ -21,12 +20,9 @@ void unite(int x, int y)
 	y = find(y);
 	if (x == y) return;
 
-	if (rnk[x] < rnk[y])
-	{
+	if (rnk[x] < rnk[y]) {
 		par[x] = y;
-	}
-	else
-	{
+	} else {
 		par[y] = x;
 		if (rnk[x] == rnk[y]) rnk[x]++;
 	}
@@ -36,4 +32,3 @@ bool same(int x, int y)
 {
 	return find(x) == find(y);
 }
-
