@@ -65,3 +65,36 @@ void add(int l, int r, int x) // add x to every element of [l, r]
 {
 	add(l, x), add(r + 1, -x);
 }
+
+// range modify, range query, 
+int bit[2][maxn], n; // bit[0] stores d[i] = a[i] - a[i - 1], bit[1] stores (i - 1) * d[i]
+
+int query(int *bit, int i_) // query a[i], not prefix sum pre[i]
+{
+	int s = 0;
+	for (int i = i_; i > 0; i -= i & -i)
+		s += bit[i];
+	return s;
+}
+
+void add(int *bit, int i_, int x)
+{
+	for (int i = i_; i <= n; i += i & -i)
+		bit[i] += x;
+}
+
+int query(int i)
+{
+    return i * query(bit[0], i) - query(bit[1], i);
+}
+
+int query(int l, int r) // query sum of [l, r]
+{
+    return query(r) - query(l - 1);
+}
+
+void add(int l, int r, int x) // add x to every element of [l, r]
+{
+	add(bit[0], l, x), add(bit[0], r + 1, -x);
+    add(bit[1], l, (l - 1) * x), add(bit[1], r + 1, r * (-x));
+}
