@@ -10,7 +10,7 @@
 added all dp on digit except a[i]
 when each digit select a[i], need to consider the last element
 */
-
+	
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
