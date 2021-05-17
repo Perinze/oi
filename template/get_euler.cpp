@@ -1,23 +1,11 @@
-int euler(int n)
-{
-	int res = n, a = n;
-	for (int i = 2; i * i <= a; i++)
-	{
-		if (a % i == 0)
-		{
-			res = res / i * (i - 1);
-			while (a % i == 0) a /= i;
-		}
-	}
-	if (a > 1) res = res / a * (a - 1);
-	return res;
-}
+#include <iostream>
+#include <cstring>
 
-// linear sieve and euler
+const int maxn = 1000, maxa = 1000;
+
 bool is_prime[maxa]; // 0 - prime, 1 - not prime
 int prime[maxn];
 int phi[maxn];
-int fact[maxn]; // smallest factor
 
 int euler(int n)
 {
@@ -32,7 +20,6 @@ int euler(int n)
 		}
 		for (int j = 0; j < cnt && i * prime[j] < n; j++) {
 			is_prime[i * prime[j]] = 1;
-			fact[i * prime[j]] = prime[j];
 			if (i % prime[j] == 0) {
 				// absolutely not necessary to use phi[i * prime[j]] = phi[i] * prime[j] which is hard to understand
 				// but maybe a little little bit faster, and it is just correct
@@ -43,4 +30,13 @@ int euler(int n)
 		}
 	}
 	return cnt;
+}
+
+int main()
+{
+    euler(maxn);
+    int n;
+    std::cin >> n;
+    std::cout << phi[n] << std::endl;
+    return 0;
 }
