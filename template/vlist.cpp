@@ -1,6 +1,6 @@
 int head[maxn];
 int to[maxe];
-int cost[maxe]
+int cost[maxe];
 int nxt[maxe];
 int cnt; // 1-ordered
 
