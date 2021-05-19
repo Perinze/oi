@@ -7,7 +7,6 @@ int n, m;
 void init(int v)
 {
     for (int i = 1; i < logmaxn; i++) {
-        if (rnk[i] < (1 << i)) break;
         __par[v][i] = __par[__par[v][i - 1]][i - 1];
     }
 }
