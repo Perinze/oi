@@ -1,0 +1,10 @@
+problem_type = "Normal"
+
+[limit]
+  memory = 134217728
+  [limit.cpu_time]
+    nanos = 0
+    secs = 1
+  [limit.real_time]
+    nanos = 0
+    secs = 1
