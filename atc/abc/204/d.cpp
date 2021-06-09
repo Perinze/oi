@@ -2,49 +2,36 @@
 using namespace std;
 
 const int maxn = 110;
+const int maxt = 1010;
 int n;
-//int a[maxn];
-vector<int> a;
-vector<int> b;
-vector<int> method[2];
-int which[maxn];
-int res[2];
+int a[maxn];
+bool dp[maxn][maxn * maxt];
 
 int main()
 {
+    ios::sync_with_stdio(false);
     cin >> n;
-    for (int i = 0; i < n; i++) {
-        int x;
-        cin >> x;
-        a.push_back(x);
+    int sum = 0;
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
+        sum += a[i];
     }
-    /*
-    for (int i = 0; i < n; i++) {
-        int bigger = (res[0] < res[1] ? 1 : 0);
-        if (which[i] == bigger && res[bigger] - res[!bigger] >= a[i]) {
-            which[i] = !which[i];
-            res[bigger] -= a[i];
-            res[!bigger] += a[i];
+    for (int i = 0; i <= n; i++)
+        dp[i][0] = true;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j <= sum; j++) {
+            dp[i][j] = dp[i][j] || dp[i - 1][j];
+            if (j >= a[i])
+                dp[i][j] = dp[i][j] || dp[i - 1][j - a[i]];
         }
     }
-    */
-    while (a.size() > 2) {
-        sort(a.begin(), a.end());
-        bool update = false;
-        for (int i = 0; i + 2 < a.size(); i++) {
-            if (a[i] + a[i + 1] <= a[i + 2]) {
-                a[i] += a[i + 1];
-                a.erase(a.begin() + i + 1);
-                update = true;
-                break;
-            }
+    int ans;
+    for (int i = (sum + 1) / 2; i <= sum; i++) {
+        if (dp[n][i]) {
+            ans = i;
+            break;
         }
-        if (!update) break;
     }
-    for (int i = 0; i < a.size(); i++) {
-        int idx = (res[0] < res[1] ? 0 : 1);
-        res[idx] += a[i];
-    }
-    cout << max(res[0], res[1]) << endl;
+    cout << ans << endl;
     return 0;
 }

@@ -1,21 +1,28 @@
 
-int dfn[MAXV];
-int low[MAXV];
+int dfn[maxn], low[maxn], dfncnt;
+int stk[maxn], top;
+bool ins[maxn];
+int scc[maxn], siz[maxn], sc;
 
-void tarjan(int v, int par)
+void tarjan(int u)
 {
-    dfn[v] = low[v] = cnt++;
-    for (int i = head[v]; i != 0; i = nxt[i]) {
-        if (del[i]) continue;
-        int u = t[i];
-        if (!dfn[u]) {
-            tarjan(u, i);
-            low[v] = min(low[v], low[u]);
-            if (dfn[v] < low[u])
-                brg[i] = true;
-        } else {
-            if (par != i)
-                low[v] = min(low[v], dfn[u]);
+    low[u] = dfn[u] = ++dfncnt;
+    stk[++tp] = u, ins[u] = true;
+    for (int v : G[u]) {
+        if (!dfn[v]) {
+            tarjan(v);
+            low[u] = min(low[u], low[v]);
+        } else if (ins[v]) {
+            low[u] = min(low[u], dfn[v]);
         }
+    }
+    if (dfn[u] == low[u]) {
+        ++sc;
+        do {
+            scc[s[tp]] = sc;
+            siz[sc]++;
+            ins[s[tp]] = false;
+            --tp;
+        } while (s[tp] != u) {
     }
 }
