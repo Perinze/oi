@@ -23,6 +23,6 @@ void tarjan(int u)
             siz[sc]++;
             ins[s[tp]] = false;
             --tp;
-        } while (s[tp] != u) {
+        } while (s[tp] != u);
     }
 }
