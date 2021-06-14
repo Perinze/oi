@@ -1,7 +1,9 @@
 #include <cstdio>
 #include <vector>
+#include <stack>
 #include <cstring>
 using namespace std;
+
 
 const int maxn = 2010;
 int S[maxn], T[maxn], D[maxn];
@@ -9,7 +11,12 @@ int n;
 vector<int> G[maxn];
 int dfn[maxn], low[maxn], dfncnt;
 int scc[maxn], siz[maxn], sc;
-int ins[maxn], stk[maxn], tp;
+int ins[maxn];
+#ifdef STL
+stack<int> stk;
+#else
+int stk[maxn], tp;
+#endif
 
 void add_edge(int u, int v)
 {
@@ -22,7 +29,11 @@ void tarjan(int u)
     //printf("in tarjan(%d)\n", u);
     low[u] = dfn[u] = ++dfncnt;
     //printf("low[%d] = dfn[%d] = %d\n", u, u, dfncnt);
+#ifdef STL
+    stk.push(u);
+#else
     stk[++tp] = u;
+#endif
     ins[u] = true;
     for (int i = 0; i < G[u].size(); i++) {
         int v = G[u][i];
@@ -37,6 +48,18 @@ void tarjan(int u)
     }
     if (dfn[u] == low[u]) {
         ++sc;
+#ifdef STL
+        while (stk.top() != u) {
+            scc[stk.top()] = sc;
+            siz[sc]++;
+            ins[stk.top()] = false;
+            stk.pop();
+        }
+        scc[stk.top()] = sc;
+        siz[sc]++;
+        ins[stk.top()] = false;
+        stk.pop();
+#else
         while (stk[tp] != u) {
             scc[stk[tp]] = sc;
             //printf("scc[%d] = %d\n", stk[tp], sc);
@@ -45,10 +68,10 @@ void tarjan(int u)
             --tp;
         }
         scc[stk[tp]] = sc;
-        //printf("scc[%d] = %d\n", stk[tp], sc);
         siz[sc]++;
         ins[stk[tp]] = false;
         --tp;
+#endif
     }
 }
 
