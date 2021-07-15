@@ -1,125 +1,147 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-namespace solve {
+const int nnode = 10;
+const int maxn = 1e7 + 10;
 
-string input;
-int sq, sqlen, sqcnt;
-#define invaild(c) (c >= 'a' && c <= 'z' || c > 'F' && c <= 'Z')
-#define vaild(c) (c >= '0' && c <= '9' || c >= 'A' && c <= 'F')
-#define hex_char(c) (c >= 'A' && c <= 'F')
-#define front() (input[sq])
-#define pop() (sq++, sqlen--)
-#define push() (sqlen++)
-#define empty() (!sqlen)
-#define blank() (!num_len)
-#define clear() (sq += sqlen, sqlen = 0, sqcnt = 0)
+int max_from[maxn];
+int max_to[maxn];
 
-int ans_id = 0;
-void print()
+char convert(char c)
 {
-	string buf;
-	while (input[sq] == '0' && input[sq + 1] != '.') sq++, sqlen--;
-	int dot_cnt = 0;
-	for (int i = 0; i < sqlen; i++) {
-		if (input[sq + i] == '.') dot_cnt++;
-		if (dot_cnt < 3 && input[sq + i - 1] == '.' && input[sq + i] == '0' && input[sq + i + 1] != '.') return;
-		if (dot_cnt == 3 && input[sq + i - 1] == '.' && input[sq + i] == '0') {
-			buf.push_back('0');
-			break;
-		}
-		buf.push_back(input[sq + i]);
+	switch (c) {
+		case '0': return '0';
+		case '1': return '1';
+		case '2': return '2';
+		case '3':
+		case '4': return '3';
+		case '5': return '4';
+		case '6':
+		case '7':
+		case '8':
+		case '9': return '5';
+		case 'A':
+		case 'B':
+		case 'C':
+		case 'D':
+		case 'E':
+		case 'F': return '6';
+		case '.': return '7';
 	}
-	++ans_id;
-	printf("%s\n", buf.c_str());
+	return '8';
 }
 
-void pop_num()
-{
-	while (front() != '.') pop();
-	pop();
-	sqcnt--;
-}
-
-int dec;
-int hex;
-int hex_only;
-int num_len;
-#define reset() (dec = 0, hex = 0, hex_only = 0)
-
-void solve()
-{
-	int p;
-	dec = 0, hex = 0;
-	hex_only = 0;
-	for (p = 0; p < input.length(); p++) {
-		char c = input[p];
-		if (invaild(c)) {
-			num_len = 0;
-			if (sqcnt == 4)
-				print();
-			push();
-			clear();
-			reset();
-			continue;
+namespace ac {
+	int trie[maxn][nnode];
+	int end[maxn];
+	int len[maxn];
+	int fail[maxn];
+	int cnt;
+	
+	void insert(const char *buf)
+	{
+		int crt = 0;
+		for (int i = 0; buf[i]; i++) {
+			int x = buf[i] - '0';
+			if (!trie[crt][x])
+				trie[crt][x] = ++cnt;
+			crt = trie[crt][x];
 		}
-		if (c == '.') {
-			reset();
-			if (blank()) {
-				push();
-				clear();
-				num_len = 0;
-				continue;
-			}
-			num_len = 0;
-			if (sqcnt == 4) {
-				print();
-				pop_num();
-				push();
-				continue;
-			}
-			push();
-		}
-		if (vaild(c)) {
-			if (blank())
-				sqcnt++;
-			num_len++;
-			if (hex_char(c))
-				hex_only = 3;
-			else
-				if (hex_only) hex_only--;
-			dec = (hex_char(c) ? 0 : dec * 10 + c - '0');
-			hex = hex * 16 + (hex_char(c) ? c - 'A' + 10 : c - '0');
-			if (hex > 255) {
-				if (hex_only && sqcnt == 4)
-					print();
-				push();
-				hex %= 256;
-				while (sqlen > 2) pop();
-				num_len = 2;
-				sqcnt = 1;
-			} else if (dec > 255) {
-				if (!hex_only && sqcnt == 4)
-					print();
-				push();
-				dec %= 100;
-				while (sqlen > 2) pop();
-				num_len = 2;
-				sqcnt = 1;
+		end[crt]++;
+		len[crt] = max(len[crt], (int)strlen(buf));
+	}
+
+	void getfail()
+	{
+		fail[0] = 0;
+		queue<int> q;
+		for (int i = 0; i < nnode; i++) {
+			if (trie[0][i]) {
+				fail[trie[0][i]] = 0;
+				q.push(trie[0][i]);
 			} else {
-				push();
+				trie[0][i] = 0;
+			}
+		}
+		while (!q.empty()) {
+			int crt = q.front(); q.pop();
+			for (int i = 0; i < nnode; i++) {
+				if (trie[crt][i]) {
+					fail[trie[crt][i]] = trie[fail[crt]][i];
+					q.push(trie[crt][i]);
+				} else {
+					trie[crt][i] = trie[fail[crt]][i];
+				}
 			}
 		}
 	}
-	if (sqcnt == 4)
-		print();
+
+	int query(const char *buf)
+	{
+		int res = 0;
+		int crt = 0;
+		for (int i = 0; buf[i]; i++) {
+			crt = trie[crt][convert(buf[i]) - '0'];
+			for (int j = crt; j; j = fail[j]) {
+				max_from[i] = max(max_from[i], len[j]);
+			}
+		}
+		return res;
+	}
 }
 
-};
+void buildac() {
+	set<string> s;
+	for (int i = 0; i < 256; i++) {
+		string str = "";
+		int tmp = i;
+		do {
+			str += convert(tmp % 10 + '0');
+			tmp /= 10;
+		} while (tmp);
+		reverse(str.begin(), str.end());
+		s.insert(str);
+		str = "";
+		tmp = i;
+		do {
+			int d = tmp % 16;
+			if (d < 10) d += '0';
+			else d += 'A' - 10;
+			str += convert(d);
+			tmp /= 16;
+		} while (tmp);
+		reverse(str.begin(), str.end());
+		s.insert(str);
+	}
+	for (auto s1 : s)
+		for (auto s2 : s) {
+			string str = s1 + '7' + s2;
+			ac::insert(str.c_str());
+		}
+	ac::getfail();
+}
+
+char passage[10000010];
 
 int main()
 {
-	while (cin >> solve::input)
-		solve::solve();
+	buildac();
+	scanf("%s", passage);
+	ac::query(passage);
+	int len = strlen(passage);
+	for (int i = len; i > 0; i--) {
+		max_to[i - max_from[i] + 1] = max(max_to[i - max_from[i] + 1], max_from[i]);
+	}
+	for (int pos = 0; pos < len; pos++) {
+		if (max_to[pos]) {
+			int next = pos + max_to[pos];
+			if (next < len - 1 && passage[next] == '.' && max_to[next + 1] != 0 && next + max_to[next + 1] < len) {
+				for (int i = pos; i <= next + max_to[next + 1]; i++) {
+					putchar(passage[i]);
+				}
+				putchar('\n');
+			}
+		}
+	}
 	return 0;
 }
