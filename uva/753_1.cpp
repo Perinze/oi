@@ -2,6 +2,7 @@
 using namespace std;
 
 const int maxn = 105 << 2;
+const int inf = 0x3f3f3f3f;
 string tmp;
 map<string, int> devid;
 map<string, int> plugid;
@@ -74,7 +75,7 @@ int main()
 		devid.clear();
 		plugid.clear();
 		memset(ndev, 0, sizeof(ndev));
-		edk.init();
+		edk.init(maxn);
 
 		cin >> n;
 		for (int i = 1; i <= n; i++) {
@@ -92,8 +93,26 @@ int main()
 			}
 			ndev[plugid[tmp]]++;
 		}
-		for (int i = 1; i <= cnt; i++) {
-			if (ndev[i]) edk.add_edge(i, )
+		cin >> k;
+		for (int i = 1; i <= k; i++) {
+			int u, v;
+			cin >> tmp;
+			if (!plugid[tmp]) {
+				plugid[tmp] = ++cnt;
+			}
+			u = plugid[tmp];
+			cin >> tmp;
+			if (!plugid[tmp]) {
+				plugid[tmp] = ++cnt;
+			}
+			v = plugid[tmp];
+			edk.add_edge(v, u, inf);
 		}
+		for (int i = 1; i <= n + m; i++) {
+			if (ndev[i]) edk.add_edge(i, cnt + 1, ndev[i]);
+		}
+		if (cas) cout << endl;
+		cout << m - edk.maxflow(0, cnt + 1) << endl;
 	}
+	return 0;
 }

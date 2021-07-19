@@ -9,7 +9,7 @@ struct edge {
 };
 void init();
 void input();
-string tmp, tmp1;
+string tmp;
 
 struct edmonds_karp {
 	int V, E;
