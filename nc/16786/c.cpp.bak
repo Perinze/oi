@@ -1,0 +1,333 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define not_vaild_char(c) (c >= 'a' && c <= 'z' || c > 'F' && c <= 'Z' || c == 0)
+#define hex_char(c) (c >= 'A' && c <= 'F')
+
+const int maxn = 1e7;
+int n;
+char pre[maxn][4], sub[maxn][4];
+bool pre_vaild[maxn], sub_vaild[maxn];
+bool vld[maxn];
+char input[maxn + 10];
+int len;
+int prelen[maxn];
+int sslen[maxn];
+char *tmp; int tmplen;
+int offset;
+
+bool find(int &p)
+{
+	for (p++; p < len; p++)
+		if (input[p] == '.')
+			return true;
+	return false;
+}
+
+void process(int idx)
+{
+	bool not_prefix = false;
+	bool not_subfix = false;
+	if (tmplen == 0) {
+		pre_vaild[idx] = false;
+		sub_vaild[idx] = false;
+		vld[idx] = false;
+		prelen[idx] = 0;
+		return;
+	}
+	if (tmp[0] == '0' && tmplen == 1) {
+		pre_vaild[idx] = true;
+		sub_vaild[idx] = true;
+		vld[idx] = false;
+		prelen[idx] = 1;
+		return;
+	}
+	if (not_vaild_char(tmp[0])) {
+		pre_vaild[idx] = false;
+		vld[idx] = false;
+		prelen[idx] = 0;
+		not_prefix = true;
+	}
+	if (not_vaild_char(tmp[tmplen - 1])) {
+		sub_vaild[idx] = false;
+		vld[idx] = false;
+		not_subfix = true;
+	}
+	bool can_be_dec = true;
+	int dec = 0;
+	int hex = 0;
+	int crtlen = 0;
+	// prefix
+	if (!not_prefix)
+	for (int i = 0; i < min(tmplen, 3); i++) {
+		if (not_vaild_char(tmp[i])) {
+			prelen[idx] = crtlen;
+			pre_vaild[idx] = true;
+			if (sslen[idx] == crtlen) vld[idx] = true;
+			for (int j = 0; j < crtlen; j++) {
+				pre[idx][j] = tmp[j];
+			}
+			break;
+		}
+		crtlen++;
+		if (hex_char(tmp[i])) {
+			can_be_dec = false;
+		}
+		if (can_be_dec) {
+			int ndec = dec * 10 + tmp[i] - '0';
+			if (ndec > 255) {
+				prelen[idx] = crtlen - 1;
+				pre_vaild[idx] = true;
+				for (int j = 0; j < crtlen - 1; j++) {
+					pre[idx][j] = tmp[j];
+				}
+				break;
+			}
+			if (crtlen == 3) {
+				prelen[idx] = crtlen;
+				pre_vaild[idx] = true;
+				for (int j = 0; j < crtlen; j++) {
+					pre[idx][j] = tmp[j];
+				}
+				break;
+			}
+			dec = ndec;
+		}
+		if (hex_char(tmp[i])) {
+			hex = hex * 16 + tmp[i] - 'A' + 10;
+		} else {
+			hex = hex * 16 + tmp[i] - '0';
+		}
+		if (!can_be_dec) {
+			if (crtlen == 2) {
+				prelen[idx] = crtlen;
+				pre_vaild[idx] = true;
+				for (int j = 0; j < crtlen; j++) {
+					pre[idx][j] = tmp[j];
+				}
+				break;
+			}
+			if (crtlen == 3) {
+				prelen[idx] = crtlen - 1;
+				pre_vaild[idx] = true;
+				for (int j = 0; j < crtlen - 1; j++) {
+					pre[idx][j] = tmp[j];
+				}
+				break;
+			}
+		}
+		if (i == min(tmplen, 3) - 1) {
+			prelen[idx] = crtlen;
+			pre_vaild[idx] = true;
+			for (int j = 0; j < crtlen; j++) {
+				pre[idx][j] = tmp[j];
+			}
+		}
+	}
+	// subfix
+	can_be_dec = true;
+	dec = 0;
+	hex = 0;
+	crtlen = 0;
+	int dec_fact = 1;
+	int hex_fact = 1;
+	if (!not_subfix)
+	for (int i = tmplen - 1; i >= max(0, tmplen - 3); i--) {
+		if (not_vaild_char(tmp[i])) {
+			sub_vaild[idx] = true;
+			for (int j = tmplen - crtlen; j < tmplen; j++) {
+				sub[idx][j - tmplen + crtlen] = tmp[j];
+			}
+			break;
+		}
+		crtlen++;
+		if (hex_char(tmp[i])) {
+			can_be_dec = false;
+		}
+		if (can_be_dec) {
+			int ndec = dec + dec_fact * (tmp[i] - '0');
+			if (ndec > 255) {
+				sub_vaild[idx] = true;
+				for (int j = tmplen - crtlen + 1; j < tmplen; j++) {
+					sub[idx][j - tmplen + crtlen - 1] = tmp[j];
+				}
+				break;
+			}
+			if (crtlen == 3) {
+				sub_vaild[idx] = true;
+				for (int j = tmplen - crtlen; j < tmplen; j++) {
+					sub[idx][j - tmplen + crtlen] = tmp[j];
+				}
+				break;
+			}
+			dec_fact *= 10;
+			dec = ndec;
+		}
+		if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+			hex = hex + hex_fact * (tmp[i] - 'A' + 10);
+		} else {
+			hex = hex + hex_fact * (tmp[i] - '0');
+		}
+		if (!can_be_dec) {
+			if (crtlen == 2) {
+				sub_vaild[idx] = true;
+				for (int j = tmplen - crtlen; j < tmplen; j++) {
+					sub[idx][j - tmplen + crtlen] = tmp[j];
+				}
+				break;
+			}
+			if (crtlen == 3) {
+				sub_vaild[idx] = true;
+				for (int j = tmplen - crtlen + 1; j < tmplen; j++) {
+					sub[idx][j - tmplen + crtlen - 1] = tmp[j];
+				}
+				break;
+			}
+		}
+		hex_fact *= 16;
+		if (i == max(0, tmplen - 3)) {
+			sub_vaild[idx] = true;
+			for (int j = tmplen - crtlen; j < tmplen; j++) {
+				sub[idx][j - tmplen + crtlen] = tmp[j];
+			}
+		}
+	}
+}
+
+void read()
+{
+	n = 0;
+	int pold = 0;
+	int p = -1;
+	tmp = input;
+	while (find(p)) {
+		sslen[n] = tmplen = p - pold;
+		process(n);
+		pold = p + 1;
+		tmp = input + pold;
+		n++;
+	}
+	sslen[n] = tmplen = len - pold;
+	process(n);
+	n++;
+}
+
+int main()
+{
+	fgets(input, maxn + 10, stdin);
+	len = strlen(input);
+	while (input[len - 1] == '\n' || input[len - 1] == '\r') input[--len] = 0;
+	read();
+	for (int i = 0; i < n; i++) {
+		printf("%d: %d:%s %d:%s %d\n", i, pre_vaild[i], pre[i], sub_vaild[i], sub[i], vld[i]);
+	}
+	for (int i = 0; i + 3 < n; i++)
+		if (sub_vaild[i] && vld[i + 1] && vld[i + 2] && pre_vaild[i + 3])
+			printf("%s.%s.%s.%s\n", sub[i], pre[i + 1], pre[i + 2], pre[i + 3]);
+	return 0;
+}
+
+/*
+void cpy(char *src, char *dst, int flag)
+{
+	int end = flag ? 3 - offset : offset;
+	src = flag ? src + offset : src;
+	for (int i = 0; i < end; i++)
+		dst[i] = src[i];
+	dst[end] = 0;
+}
+
+bool vaild(int flag)
+{
+	bool decb = true;
+	int dec = 0;
+	int hex = 0;
+	if (flag) {
+		int dfact = 1;
+		int hfact = 1;
+		if (tmp[2] >= 'a' && tmp[2] <= 'z' || tmp[2] > 'F' && tmp[2] <= 'Z' || tmp[2] == '.') return false;
+		for (int i = 2; i >= 0; i--) {
+			if (tmp[i] == '.' || tmp[i] >= 'a' && tmp[i] <= 'z' || tmp[i] > 'F' && tmp[i] <= 'Z') {
+				offset = i + 1;
+				while (tmp[offset] == '0') offset++;
+				if (offset == 3) offset--;
+				return true;
+			}
+			if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+				decb = false;
+			}
+			if (decb) {
+				int ndec = dec + dfact * (tmp[i] - '0');
+				if (ndec > 255) {
+					offset = 1;
+					while (tmp[offset] == '0') offset++;
+					if (offset == 3) offset--;
+					return true;
+				}
+				if (i == 0) {
+					offset = 0;
+					while (tmp[offset] == '0') offset++;
+					if (offset == 3) offset--;
+					return true;
+				}
+				dfact *= 10;
+				dec = ndec;
+			}
+			if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+				hex = hex + hfact * (tmp[i] - 'A' + 10);
+			} else {
+				hex = hex + hfact * (tmp[i] - '0');
+			}
+			if (!decb) {
+				if (i == 1) {
+					offset = 1;
+					while (tmp[offset] == '0') offset++;
+					if (offset == 3) offset--;
+					return true;
+				}
+				if (i == 0) {
+					return false;
+				}
+			}
+			hfact *= 16;
+		}
+	} else {
+		if (tmp[0] >= 'a' && tmp[0] <= 'z' || tmp[0] > 'F' && tmp[0] <= 'Z' || tmp[0] == '0' || tmp[0] == '.' || tmp[0] == 0) return false;
+		for (int i = 0; i < 3; i++) {
+			if (tmp[i] == '.' || tmp[i] >= 'a' && tmp[i] <= 'z' || tmp[i] > 'F' && tmp[i] <= 'Z') {
+				offset = i;
+				return true;
+			}
+			if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+				decb = false;
+			}
+			if (decb) {
+				int ndec = dec * 10 + tmp[i] - '0';
+				if (ndec > 255) {
+					offset = 2;
+					return true;
+				}
+				if (i == 2) {
+					offset = 3;
+					return true;
+				}
+				dec = ndec;
+			}
+			if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+				hex = hex * 16 + tmp[i] - 'A' + 10;
+			} else {
+				hex = hex * 16 + tmp[i] - '0';
+			}
+			if (!decb) {
+				if (i == 1) {
+					offset = 2;
+					return true;
+				}
+				if (i == 2) {
+					return false;
+				}
+			}
+		}
+	}
+}
+*/
