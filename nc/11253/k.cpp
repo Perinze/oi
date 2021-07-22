@@ -4,42 +4,37 @@ using namespace std;
 const int maxn = 1e6 + 5;
 
 int n, k;
-int p[maxn], x[maxn];
-
-int a[maxn];
-
-void exchange(int l, int r)
-{
-	int tmp = a[l];
-	for (int i = l; i < r; i++)
-		a[i] = a[i + 1];
-	a[r] = tmp;
-}
+int b[maxn];
+int s[maxn], tp;
+vector<int> G[maxn];
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin >> n >> k;
-	for (int i = 1; i <= k; i++) {
-		cin >> p[i] >> x[i];
+	for (int i = 0, p, x; i < k; i++) {
+		cin >> p >> x;
+		b[p] = x;
 	}
-	for (int i = 1; i <= n; i++)
-		a[i] = i;
-	bool upd;
-	do {
-		upd = false;
-		for (int i = k; i > 0; i--) {
-			int r = p[i];
-			int l = x[i];
-			if (l != r) {
-				exchange(l, r);
-				upd = true;
-			}
-		}
-	} while (upd);
+	tp = 0;
 	for (int i = 1; i <= n; i++) {
-		cout << a[i] << ' ';
+		if (b[i]) {
+			if (tp + 1 > b[i]) {
+				G[i].push_back(s[tp]);
+				clog << i << " -> " << s[tp] << endl;
+			}
+			while (i < s[tp]) {
+				G[s[tp]].push_back(i);
+				clog << s[tp] << " -> " << i << endl;
+				tp--;
+			} 
+		} else {
+			if (tp) {
+				G[s[tp]].push_back(i);
+				clog << s[tp] << " -> " << i << endl;
+			}
+			s[++tp] = i;
+		}
 	}
-	cout << endl;
 	return 0;
 }

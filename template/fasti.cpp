@@ -6,7 +6,7 @@ namespace i {
         ? EOF                                                                   \
         : *p1++)
     
-    template <typename T>
+    template <typename T = int>
     inline T read()
     {
         T x = 0, s= 1;
