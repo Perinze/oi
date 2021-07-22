@@ -29,7 +29,8 @@ int main()
 			int c1 = (a1 + b1) % 10;
 			int c2 = (a2 + b2) % 20;
 			if (c1 == c2) {
-				cout << (b1 > b2 ? "first" : "second");
+				if (b1 == b2) cout << "tie";
+				else cout << (b1 > b2 ? "first" : "second");
 			} else {
 				cout << (c1 > c2 ? "first" : "second");
 			}
